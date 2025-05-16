@@ -32,7 +32,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
   late TextEditingController _loginController; // read what was typed as login
-  late TextEditingController _passwordController; // read what was typed as login
+  late TextEditingController _passwordController; // read what was typed as pass
   var imageSource = 'images/question-mark.png';
 
 
