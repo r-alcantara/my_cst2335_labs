@@ -31,9 +31,9 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  late TextEditingController _loginController; //this is to read what was typed
-  late TextEditingController _passwordController;
-  String imageSource = 'images/question-mark.png';
+  late TextEditingController _loginController; // read what was typed as login
+  late TextEditingController _passwordController; // read what was typed as login
+  var imageSource = 'images/question-mark.png';
 
 
   @override
@@ -68,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 decoration: InputDecoration(
                     hintText:"Login",
                     border: OutlineInputBorder(),
-                    labelText: "User login"
+                    labelText: "Login"
                 )
             ),
 
