@@ -30,17 +30,15 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  // stack item generator
-  Widget generateStackItem(
-    String image,
-    String title,
-    AlignmentGeometry alignment,
-  ) {
+
+  // stack item generator. use to
+  Widget generateStackItem(String image, String title, AlignmentGeometry alignment)
+  {
     return Stack(
       //component 1
       alignment: alignment,
       children: [
-        CircleAvatar(backgroundImage: AssetImage(image), radius: 50),
+        CircleAvatar(backgroundImage: AssetImage(image), radius: 45),
         Text(
           title,
           style: TextStyle(
@@ -65,8 +63,11 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Widget> generateRow() {
     return meats
         .map(
-          (data) =>
-              generateStackItem(data.$2, data.$1, AlignmentDirectional.center),
+          (data) => generateStackItem(
+              data.$2,
+              data.$1,
+              AlignmentDirectional.center
+          ),
         )
         .toList();
   }
@@ -75,7 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
   List<(String title, String image)> course = [
     ('Main Dishes', 'images/maindishes.jpg'),
     ('Salad Recipes', 'images/salad.jpg'),
-    ('Side Dishes', 'images/sidedishes.jpg'),
+    ('Side Dish', 'images/sidedishes.jpg'),
     ('Crockpot', 'images/cp.jpg'),
   ];
 
@@ -100,12 +101,15 @@ class _MyHomePageState extends State<MyHomePage> {
     ('Cookie', 'images/cookie.jpg'),
   ];
 
-  // generate course items
+  // generate dessert items
   List<Widget> generateDessert() {
     return dessert
         .map(
-          (data) =>
-              generateStackItem(data.$2, data.$1, AlignmentDirectional.center),
+          (data) => generateStackItem(
+              data.$2,
+              data.$1,
+              AlignmentDirectional.center
+          ),
         )
         .toList();
   }
@@ -117,20 +121,25 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: Center(
+
+      body: Padding(
+        padding: EdgeInsets.fromLTRB(10, 20, 10, 30),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             // Header
             Text(
               "BROWSE CATEGORIES",
-              style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
 
             // description
-            Text(
-              "Not sure about exactly which recipe you're looking for? Do a search, or dive into our most popular categories",
-              style: TextStyle(fontSize: 15),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16.0, top: 16.0),
+              child: Text(
+                "Not sure about exactly which recipe you're looking for? Do a search, or dive into our most popular categories",
+                style: TextStyle(fontSize: 15),
+              ),
             ),
 
             // MEAT SECTION
