@@ -11,11 +11,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Lab 3',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Lab 3'),
     );
   }
 }
@@ -114,6 +114,18 @@ class _MyHomePageState extends State<MyHomePage> {
         .toList();
   }
 
+  List<Widget> generateItem(List<(String title, String image)> data, AlignmentDirectional alignment) {
+    return data
+        .map(
+          (data) => generateStackItem(
+          data.$2,
+          data.$1,
+              alignment
+      ),
+    )
+        .toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -178,7 +190,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: generateDessert(),
+              children: generateItem(dessert, AlignmentDirectional.bottomCenter),
             ),
           ],
         ),
