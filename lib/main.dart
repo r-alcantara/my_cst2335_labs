@@ -4,13 +4,13 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatelessWidget { //root widget
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Lab 3',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -30,20 +30,18 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
-  // stack item generator. use to
-  Widget generateStackItem(String image, String title, AlignmentGeometry alignment)
-  {
-    return Stack(
-      //component 1
+  // method creating reusable stack widget
+  Widget generateStackItem(String image, String title,
+      AlignmentGeometry alignment) {
+    return Stack (
       alignment: alignment,
       children: [
-        CircleAvatar(backgroundImage: AssetImage(image), radius: 45),
+        CircleAvatar(backgroundImage: AssetImage(image), radius: 40),
         Text(
           title,
           style: TextStyle(
             color: Colors.white,
-            fontSize: 16,
+            fontSize: 10,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -51,7 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  // list meat items
+  // list of meat items
   List<(String title, String image)> meats = [
     ('BEEF', 'images/beef.jpg'),
     ('CHICKEN', 'images/chicken.jpg'),
@@ -59,20 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
     ('SEAFOOD', 'images/seafood.jpg'),
   ];
 
-  // generate meat items
-  List<Widget> generateRow() {
-    return meats
-        .map(
-          (data) => generateStackItem(
-              data.$2,
-              data.$1,
-              AlignmentDirectional.center
-          ),
-        )
-        .toList();
-  }
-
-  // list course items
+  // list of course items
   List<(String title, String image)> course = [
     ('Main Dishes', 'images/maindishes.jpg'),
     ('Salad Recipes', 'images/salad.jpg'),
@@ -80,20 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
     ('Crockpot', 'images/cp.jpg'),
   ];
 
-  // generate course items
-  List<Widget> generateCourse() {
-    return course
-        .map(
-          (data) => generateStackItem(
-            data.$2,
-            data.$1,
-            AlignmentDirectional.bottomEnd,
-          ),
-        )
-        .toList();
-  }
-
-  // list dessert items
+  // list of dessert items (tuple)
   List<(String title, String image)> dessert = [
     ('Ice Cream', 'images/icecream.jpg'),
     ('Brownie', 'images/brownie.jpg'),
@@ -101,27 +73,17 @@ class _MyHomePageState extends State<MyHomePage> {
     ('Cookie', 'images/cookie.jpg'),
   ];
 
-  // generate dessert items
-  List<Widget> generateDessert() {
-    return dessert
-        .map(
-          (data) => generateStackItem(
-              data.$2,
-              data.$1,
-              AlignmentDirectional.center
-          ),
-        )
-        .toList();
-  }
-
-  List<Widget> generateItem(List<(String title, String image)> data, AlignmentDirectional alignment) {
+  // convert item list (meat, course or dessert) tuple into list of widget
+  List<Widget> generateItem(List<(String title, String image)> data,
+      AlignmentDirectional alignment) {
     return data
         .map(
-          (data) => generateStackItem(
-          data.$2,
-          data.$1,
+          (data) =>
+          generateStackItem(
+              data.$2, // image
+              data.$1, // title
               alignment
-      ),
+          ),
     )
         .toList();
   }
@@ -130,16 +92,20 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Theme
+            .of(context)
+            .colorScheme
+            .inversePrimary,
         title: Text(widget.title),
       ),
 
-      body: Padding(
-        padding: EdgeInsets.fromLTRB(10, 20, 10, 30),
+      body:
+      Padding(
+        padding: EdgeInsets.fromLTRB(5, 20, 5, 30),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            // Header
+            // header
             Text(
               "BROWSE CATEGORIES",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -147,12 +113,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
             // description
             Padding(
-              padding: const EdgeInsets.only(bottom: 16.0, top: 16.0),
+              padding: const EdgeInsets.all(10),
               child: Text(
                 "Not sure about exactly which recipe you're looking for? Do a search, or dive into our most popular categories",
                 style: TextStyle(fontSize: 15),
               ),
             ),
+
 
             // MEAT SECTION
             Padding(
@@ -164,8 +131,9 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: generateRow(),
+              children: generateItem(meats, AlignmentDirectional.center),
             ),
+
 
             // COURSE SECTION
             Padding(
@@ -177,8 +145,9 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: generateCourse(),
+              children: generateItem(course, AlignmentDirectional.bottomCenter),
             ),
+
 
             // DESSERT SECTION
             Padding(
@@ -190,18 +159,12 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: generateItem(dessert, AlignmentDirectional.bottomCenter),
+              children: generateItem(
+                  dessert, AlignmentDirectional.bottomCenter),
             ),
           ],
         ),
       ),
     );
   }
-
-  // method to generate and return a list of widget
-  // List<Widget> generateMeat () {
-  //   return [
-  //    generateStackItem("images/beef.jpg", "BEEF", AlignmentDirectional.center)
-  //  ];
-  // }
 }
