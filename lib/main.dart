@@ -94,9 +94,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   title: const Text('Save?'),
                   content: const Text('Do you want to save this login and password?'),
                   actions: <Widget>[
-                      ElevatedButton(onPressed: () {}, child: Text("NO")),
-                      FilledButton(onPressed: () {}, child: Text("YES")),
-                      OutlinedButton(onPressed: () {}, child: Text("LATER"))
+                      ElevatedButton(onPressed: () {Navigator.pop(context);}, child: Text("NO")),
+                      FilledButton(onPressed: () {Navigator.pop(context);}, child: Text("YES")),
+                      OutlinedButton(onPressed: () {Navigator.pop(context);}, child: Text("LATER"))
                   ]// end actions widget
                 ); // end AlertDialog
 
