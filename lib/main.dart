@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(const MyApp());
@@ -41,6 +42,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     _loginController = TextEditingController(); //making _controller
     _passwordController = TextEditingController();
+    getSharedPreferences();
   }
 
   @override
@@ -48,6 +50,26 @@ class _MyHomePageState extends State<MyHomePage> {
     _loginController.dispose();
     _passwordController.dispose();
     super.dispose(); // free the memory of what was typed
+  }
+
+  void getSharedPreferences() async
+  {
+    // wait until this finishes. needs async:
+    var data = await SharedPreferences.getInstance(); // return the SharedPreferences that are loaded (could be any images)
+
+    var str =  data.getString("UserLogIn"); // return null if UserlogIn is not there
+    if (str != null) // found it!
+      {
+        // get page ready with data on disk
+      _loginController = str as TextEditingController;
+      }
+
+
+
+    // does not need async:
+    SharedPreferences.getInstance().then( (data ) {
+
+    });
   }
 
   @override
@@ -86,7 +108,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
             ElevatedButton( child:  Text("Login"), onPressed: () {
               String password = _passwordController.text;
-
               showDialog (context: context,
                 builder: (BuildContext context) {
 
@@ -94,8 +115,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   title: const Text('Save?'),
                   content: const Text('Do you want to save this login and password?'),
                   actions: <Widget>[
-                      ElevatedButton(onPressed: () {Navigator.pop(context);}, child: Text("NO")),
-                      FilledButton(onPressed: () {Navigator.pop(context);}, child: Text("YES")),
+                    FilledButton(onPressed: () {
+                      SharedPreferences.getInstance().then( (data ) => data.setString("UserLogIn", _loginController.value.text));
+                      data.setString()
+
+                      Navigator.pop(context);}, child: Text("YES")),
+
+
+                    ElevatedButton(onPressed: () {Navigator.pop(context);}, child: Text("NO")),
+
                       OutlinedButton(onPressed: () {Navigator.pop(context);}, child: Text("LATER"))
                   ]// end actions widget
                 ); // end AlertDialog
@@ -103,13 +131,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
                 }); // end showDialog
 
-
-              var snackBar = SnackBar( content: Text('Yay a snackbar!'),
-                duration: Duration(seconds: 30),
-                action:SnackBarAction( label:'Click Me', onPressed: () {} )
-              );
-
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
               setState(() {
                 if (password == "QWERTY123") {
                   imageSource = 'images/idea.png';
@@ -123,4 +144,5 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+
 }
