@@ -87,6 +87,12 @@ class _MyHomePageState extends State<MyHomePage> {
             ElevatedButton( child:  Text("Login"), onPressed: () {
               String password = _passwordController.text;
 
+              var snackBar = SnackBar( content: Text('Yay a snackbar!'),
+                duration: Duration(seconds: 30),
+                action:SnackBarAction( label:'Click Me', onPressed: () {} )
+              );
+
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
               setState(() {
                 if (password == "QWERTY123") {
                   imageSource = 'images/idea.png';
