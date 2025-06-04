@@ -117,7 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   actions: <Widget>[
                     FilledButton(onPressed: () {
                       SharedPreferences.getInstance().then( (data ) => data.setString("UserLogIn", _loginController.value.text));
-                      data.setString()
+
 
                       Navigator.pop(context);}, child: Text("YES")),
 
