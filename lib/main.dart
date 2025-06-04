@@ -87,6 +87,23 @@ class _MyHomePageState extends State<MyHomePage> {
             ElevatedButton( child:  Text("Login"), onPressed: () {
               String password = _passwordController.text;
 
+              showDialog (context: context,
+                builder: (BuildContext context) {
+
+                return AlertDialog(
+                  title: const Text('Save?'),
+                  content: const Text('Do you want to save this login and password?'),
+                  actions: <Widget>[
+                      ElevatedButton(onPressed: () {}, child: Text("NO")),
+                      FilledButton(onPressed: () {}, child: Text("YES")),
+                      OutlinedButton(onPressed: () {}, child: Text("LATER"))
+                  ]// end actions widget
+                ); // end AlertDialog
+
+
+                }); // end showDialog
+
+
               var snackBar = SnackBar( content: Text('Yay a snackbar!'),
                 duration: Duration(seconds: 30),
                 action:SnackBarAction( label:'Click Me', onPressed: () {} )
