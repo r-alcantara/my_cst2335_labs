@@ -61,15 +61,27 @@ class _MyHomePageState extends State<MyHomePage> {
     if (str != null) // found it!
       {
         // get page ready with data on disk
-      _loginController = str as TextEditingController;
+      _loginController.text = str;
       }
-
-
 
     // does not need async:
     SharedPreferences.getInstance().then( (data ) {
 
     });
+
+    var pass =  data.getString("UserPass"); // return null if UserPass is not there
+    if (pass != null) // found it!
+        {
+      // get page ready with data on disk
+      _passwordController.text = pass;
+    }
+
+    // does not need async:
+    SharedPreferences.getInstance().then( (data ) {
+
+    });
+
+
   }
 
   @override
@@ -108,6 +120,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
             ElevatedButton( child:  Text("Login"), onPressed: () {
               String password = _passwordController.text;
+
+
               showDialog (context: context,
                 builder: (BuildContext context) {
 
@@ -117,14 +131,19 @@ class _MyHomePageState extends State<MyHomePage> {
                   actions: <Widget>[
                     FilledButton(onPressed: () {
                       SharedPreferences.getInstance().then( (data ) => data.setString("UserLogIn", _loginController.value.text));
+                      SharedPreferences.getInstance().then( (data ) => data.setString("UserPass", _passwordController.value.text));
 
+                      Navigator.pop(context);
 
-                      Navigator.pop(context);}, child: Text("YES")),
+                      var snackBar = SnackBar( content: Text('Username and Password have been saved and loaded!'),
+                      );
+
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      }, child: Text("YES")),
 
 
                     ElevatedButton(onPressed: () {Navigator.pop(context);}, child: Text("NO")),
-
-                      OutlinedButton(onPressed: () {Navigator.pop(context);}, child: Text("LATER"))
+                    OutlinedButton(onPressed: () {Navigator.pop(context);}, child: Text("LATER"))
                   ]// end actions widget
                 ); // end AlertDialog
 
