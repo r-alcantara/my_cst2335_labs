@@ -1,3 +1,4 @@
+import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart' show EncryptedSharedPreferences;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -35,6 +36,7 @@ class _MyHomePageState extends State<MyHomePage> {
   late TextEditingController _loginController; // read what was typed as login
   late TextEditingController _passwordController; // read what was typed as pass
   var imageSource = 'images/question-mark.png';
+  final EncryptedSharedPreferences _eprefs = EncryptedSharedPreferences();
 
 
 
@@ -56,15 +58,17 @@ class _MyHomePageState extends State<MyHomePage> {
   void getSharedPreferences() async
   {
     // wait until this finishes. needs async:
-    var data = await SharedPreferences.getInstance(); // return the SharedPreferences that are loaded (could be any images)
+    //var data = await EncryptedSharedPreferences.getInstance(); // return the SharedPreferences that are loaded (could be any images)
 
-    var str =  data.getString("UserLogIn"); // return null if UserlogIn is not there
-    if (str != null) // found it!
+    var str =  await _eprefs.getString("UserLogIn"); // return null if UserlogIn is not there
+    var pw =  await _eprefs.getString("UserPass"); // return null if UserlogIn is not there
+    if (str.length>0) // found it!
       {
         // get page ready with data on disk
-      _loginController.text = str;
+      _loginController.text =  str;
+      _passwordController.text = pw;
       }
-
+/*
     // does not need async:
     SharedPreferences.getInstance().then( (data ) {
 
@@ -75,7 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
         {
       // get page ready with data on disk
       _passwordController.text = pass;
-    }
+    }*/
 
     // does not need async:
     SharedPreferences.getInstance().then( (data ) {
@@ -131,9 +135,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   content: const Text('Do you want to save this login and password?'),
                   actions: <Widget>[
                     FilledButton(onPressed: () {
-                      SharedPreferences.getInstance().then( (data ) => data.setString("UserLogIn", _loginController.value.text));
+                      _eprefs.setString("UserLogIn", _loginController.value.text);
+                      _eprefs.setString("UserPass", _passwordController.value.text);
 
-                      SharedPreferences.getInstance().then( (data ) => data.setString("UserPass", _passwordController.value.text));
 
                       Navigator.pop(context);
 
@@ -144,7 +148,12 @@ class _MyHomePageState extends State<MyHomePage> {
                       }, child: Text("YES")),
 
 
-                    ElevatedButton(onPressed: () {Navigator.pop(context);}, child: Text("NO")),
+                    ElevatedButton(onPressed: () {
+                      Navigator.pop(context);
+                      _eprefs.clear();
+                      }, child: Text("NO")),
+
+
                     OutlinedButton(onPressed: () {Navigator.pop(context);}, child: Text("LATER"))
                   ]// end actions widget
                 ); // end AlertDialog
