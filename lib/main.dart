@@ -37,6 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
   var imageSource = 'images/question-mark.png';
 
 
+
   @override
   void initState() {
     super.initState();
@@ -131,6 +132,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   actions: <Widget>[
                     FilledButton(onPressed: () {
                       SharedPreferences.getInstance().then( (data ) => data.setString("UserLogIn", _loginController.value.text));
+
                       SharedPreferences.getInstance().then( (data ) => data.setString("UserPass", _passwordController.value.text));
 
                       Navigator.pop(context);
