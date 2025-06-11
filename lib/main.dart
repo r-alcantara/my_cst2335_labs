@@ -1,5 +1,6 @@
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart' show EncryptedSharedPreferences;
 import 'package:flutter/material.dart';
+import 'package:lab2/ProfilePage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -12,12 +13,17 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp(  //constructor for whole application
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Start of Week4 Lab'),
+     // home: const MyHomePage(title: 'Start of Week4 Lab'), //remove this fro named routes
+      initialRoute: '/',  //default route
+      routes: {
+        '/'           : (context) => MyHomePage(title: 'title'),
+        '/secondPage' : (context) => ProfilePage()
+      }
     );
   }
 }
