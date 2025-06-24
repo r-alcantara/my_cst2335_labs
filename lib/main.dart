@@ -132,10 +132,14 @@ class _MyHomePageState extends State<MyHomePage> {
             ElevatedButton(
               child: Text("Login"),
               onPressed: () {
+                String login = _loginController.text;
                 String password = _passwordController.text;
                 DataRepository.loginName = _loginController.value.text; // take what user type in
 
-                Navigator.pushNamed(context,'/profilePage');
+                // valid credentials
+                String validlogin = "Ramona";
+                String validpassword = "QWERTY123";
+
 
                 showDialog(
                   context: context,
@@ -192,10 +196,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 ); // end showDialog
 
                 setState(() {
-                  if (password == "QWERTY123") {
+                  if (password == validpassword && login == validlogin) {
                     imageSource = 'images/idea.png';
+                    DataRepository.loginName = login; // save login
+                    Navigator.pushNamed(context,'/profilePage');
                   } else {
                     imageSource = 'images/stop.png';
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Invalid login or password")));
                   }
                 });
               },
