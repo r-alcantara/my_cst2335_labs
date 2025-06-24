@@ -1,4 +1,5 @@
-import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart' show EncryptedSharedPreferences;
+import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart'
+    show EncryptedSharedPreferences;
 import 'package:flutter/material.dart';
 import 'package:lab2/ProfilePage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,21 +14,23 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(  //constructor for whole application
+
+    // 3.  constructor for whole application
+    return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-     // home: const MyHomePage(title: 'Start of Week4 Lab'), //remove this fro named routes
-      initialRoute: '/',  //default route
-      routes: {
-        '/'           : (context) => MyHomePage(title: 'title'),
-        '/secondPage' : (context) => ProfilePage()
-      }
+
+      initialRoute: '/', // home: const MyHomePage(title: 'Start of Week4 Lab'), //remove this fro named routes
+
+      routes: { //default route {} is a map
+        '/': (context) => MyHomePage(title: 'title'),
+        '/profilePage': (context) => ProfilePage(),
+      },
     );
   }
 }
-
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -39,13 +42,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   late TextEditingController _loginController; // read what was typed as login
   late TextEditingController _passwordController; // read what was typed as pass
   var imageSource = 'images/question-mark.png';
   final EncryptedSharedPreferences _eprefs = EncryptedSharedPreferences();
-
-
 
   @override
   void initState() {
@@ -62,20 +62,23 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose(); // free the memory of what was typed
   }
 
-  void getSharedPreferences() async
-  {
+  void getSharedPreferences() async {
     // wait until this finishes. needs async:
     //var data = await EncryptedSharedPreferences.getInstance(); // return the SharedPreferences that are loaded (could be any images)
 
-    var str =  await _eprefs.getString("UserLogIn"); // return null if UserlogIn is not there
-    var pw =  await _eprefs.getString("UserPass"); // return null if UserlogIn is not there
-    if (str.length>0) // found it!
-      {
-        // get page ready with data on disk
-      _loginController.text =  str;
+    var str = await _eprefs.getString(
+      "UserLogIn",
+    ); // return null if UserlogIn is not there
+    var pw = await _eprefs.getString(
+      "UserPass",
+    ); // return null if UserlogIn is not there
+    if (str.length > 0) // found it!
+    {
+      // get page ready with data on disk
+      _loginController.text = str;
       _passwordController.text = pw;
-      }
-/*
+    }
+    /*
     // does not need async:
     SharedPreferences.getInstance().then( (data ) {
 
@@ -89,11 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }*/
 
     // does not need async:
-    SharedPreferences.getInstance().then( (data ) {
-
-    });
-
-
+    SharedPreferences.getInstance().then((data) {});
   }
 
   @override
@@ -107,79 +106,98 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-
-
             TextField(
-                controller: _loginController,
-                decoration: InputDecoration(
-                    hintText:"Login",
-                    border: OutlineInputBorder(),
-                    labelText: "Login"
-                )
+              controller: _loginController,
+              decoration: InputDecoration(
+                hintText: "Login",
+                border: OutlineInputBorder(),
+                labelText: "Login",
+              ),
             ),
 
             TextField(
-                controller: _passwordController, obscureText: true,
-                decoration: InputDecoration(
-                    hintText:"Password",
-                    border: OutlineInputBorder(),
-                    labelText: "Password"
-                )
+              controller: _passwordController,
+              obscureText: true,
+              decoration: InputDecoration(
+                hintText: "Password",
+                border: OutlineInputBorder(),
+                labelText: "Password",
+              ),
             ),
 
+            Semantics(child: Image.asset(imageSource, width: 300, height: 300)),
 
-            Semantics(child: Image.asset(imageSource, width: 300, height: 300,),),
+            ElevatedButton(
+              child: Text("Login"),
+              onPressed: () {
+                String password = _passwordController.text;
 
-            ElevatedButton( child:  Text("Login"), onPressed: () {
-              String password = _passwordController.text;
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text('Save?'),
+                      content: const Text(
+                        'Do you want to save this login and password?',
+                      ),
+                      actions: <Widget>[
+                        FilledButton(
+                          onPressed: () {
+                            _eprefs.setString(
+                              "UserLogIn",
+                              _loginController.value.text,
+                            );
+                            _eprefs.setString(
+                              "UserPass",
+                              _passwordController.value.text,
+                            );
 
+                            Navigator.pop(context);
 
-              showDialog (context: context,
-                builder: (BuildContext context) {
+                            var snackBar = SnackBar(
+                              content: Text(
+                                'Username and Password have been saved and loaded!',
+                              ),
+                            );
 
-                return AlertDialog(
-                  title: const Text('Save?'),
-                  content: const Text('Do you want to save this login and password?'),
-                  actions: <Widget>[
-                    FilledButton(onPressed: () {
-                      _eprefs.setString("UserLogIn", _loginController.value.text);
-                      _eprefs.setString("UserPass", _passwordController.value.text);
+                            ScaffoldMessenger.of(
+                              context,
+                            ).showSnackBar(snackBar);
+                          },
+                          child: Text("YES"),
+                        ),
 
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            _eprefs.clear();
+                          },
+                          child: Text("NO"),
+                        ),
 
-                      Navigator.pop(context);
+                        OutlinedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text("LATER"),
+                        ),
+                      ], // end actions widget
+                    ); // end AlertDialog
+                  },
+                ); // end showDialog
 
-                      var snackBar = SnackBar( content: Text('Username and Password have been saved and loaded!'),
-                      );
-
-                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                      }, child: Text("YES")),
-
-
-                    ElevatedButton(onPressed: () {
-                      Navigator.pop(context);
-                      _eprefs.clear();
-                      }, child: Text("NO")),
-
-
-                    OutlinedButton(onPressed: () {Navigator.pop(context);}, child: Text("LATER"))
-                  ]// end actions widget
-                ); // end AlertDialog
-
-
-                }); // end showDialog
-
-              setState(() {
-                if (password == "QWERTY123") {
-                  imageSource = 'images/idea.png';
-                } else {
-                  imageSource = 'images/stop.png';
-                }
-              });
-            },),
+                setState(() {
+                  if (password == "QWERTY123") {
+                    imageSource = 'images/idea.png';
+                  } else {
+                    imageSource = 'images/stop.png';
+                  }
+                });
+              },
+            ),
           ],
         ),
       ),
     );
   }
-
 }
