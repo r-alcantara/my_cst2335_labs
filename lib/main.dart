@@ -110,7 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
             TextField(
               controller: _loginController,
               decoration: InputDecoration(
-                hintText: "Login",
+                hintText: "Enter your Login here",
                 border: OutlineInputBorder(),
                 labelText: "Login",
               ),
@@ -120,7 +120,7 @@ class _MyHomePageState extends State<MyHomePage> {
               controller: _passwordController,
               obscureText: true,
               decoration: InputDecoration(
-                hintText: "Password",
+                hintText: "Enter your Password here",
                 border: OutlineInputBorder(),
                 labelText: "Password",
               ),
@@ -132,6 +132,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Text("Login"),
               onPressed: () {
                 String password = _passwordController.text;
+                DataRepository.loginName = _loginController.value.text; // take what user type in
 
                 showDialog(
                   context: context,
@@ -155,7 +156,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
                             Navigator.pop(context);
 
-                            var snackBar = SnackBar(
+                            var snackBar = SnackBar( // when user say yes
                               content: Text(
                                 'Username and Password have been saved and loaded!',
                               ),
