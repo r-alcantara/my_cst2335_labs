@@ -19,7 +19,7 @@ class ProfilePageState extends State<ProfilePage> {
 
       body: Center(
         child: Column(
-            children: [Text("Welcome Back! This is Page 2")]
+            children: [Text("Welcome Back! [user name from log in page ] //This is Page 2")]
         ),
       ),
     ); //Use a Scaffold to layout a page with an AppBar and main body region

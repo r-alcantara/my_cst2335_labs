@@ -3,6 +3,7 @@ import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart'
 import 'package:flutter/material.dart';
 import 'package:lab2/ProfilePage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'DataRepository.dart';
 
 void main() {
   runApp(const MyApp());
