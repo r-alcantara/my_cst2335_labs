@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lab2/DataRepository.dart';
+import 'package:lab2/dataRepository.dart';
+import 'package:url_launcher/url_launcher.dart';
 //import 'package:flutter/rendering.dart';
 
 // 1. resources for application
@@ -26,14 +27,22 @@ class ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     // returns Scaffold for page
-    return Scaffold(
-      appBar: AppBar(title: Text("Page 2")),
+    return Scaffold( appBar: AppBar(title: Text("Page 2")),
 
-      body: Center(
-        child: Column(
-            children: [Text("Welcome Back, $name ! This is Page 2")]
-        ),
+      body: Center( child:
+      Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+          Text("Welcome Back, $name ! This is Page 2"),
 
+          FilledButton (child:Text("Go back"),
+              onPressed: () {
+                  Navigator.pop(context);
+              },),
+          OutlinedButton(onPressed: () {
+            //launchUrl( Uri (scheme:"https://www.algonquincollege.com") );
+            launch("https://www.algonquincollege.com/library/");
+            },
+              child: Text("Launch URL", style:TextStyle(fontSize:40.0),))
+      ]),
       ),
     ); //Use a Scaffold to layout a page with an AppBar and main body region
   }
