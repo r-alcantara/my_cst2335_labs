@@ -134,6 +134,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 String password = _passwordController.text;
                 DataRepository.loginName = _loginController.value.text; // take what user type in
 
+                Navigator.pushNamed(context,'/profilePage');
+
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
