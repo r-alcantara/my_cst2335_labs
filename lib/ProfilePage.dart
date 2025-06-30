@@ -101,11 +101,31 @@ class ProfilePageState extends State<ProfilePage> {
 
             // use Flexible() inside Row() for proper resize on diff devices
             Row(children: [
-                Flexible(child: TextField(controller: _firstName,
-                    decoration: InputDecoration(
-                      hintText: "Enter your first name here",
-                      border: OutlineInputBorder(),
-                      labelText: "first name",
+                Flexible(child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(controller: _firstName,
+                      decoration: InputDecoration(
+                        hintText: "Enter your first name here",
+                        border: OutlineInputBorder(),
+                        labelText: "first name",
+                      ),
+                    ),
+                ),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Flexible(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      controller: _lastName,
+                      decoration: InputDecoration(
+                        hintText: "Enter your last name here",
+                        border: OutlineInputBorder(),
+                        labelText: "last name",
+                      ),
                     ),
                   ),
                 ),
@@ -114,26 +134,15 @@ class ProfilePageState extends State<ProfilePage> {
             Row(
               children: [
                 Flexible(
-                  child: TextField(
-                    controller: _lastName,
-                    decoration: InputDecoration(
-                      hintText: "Enter your last name here",
-                      border: OutlineInputBorder(),
-                      labelText: "last name",
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                Flexible(
-                  child: TextField(
-                    controller: _phone,
-                    decoration: InputDecoration(
-                      hintText: "Enter your phone number here",
-                      border: OutlineInputBorder(),
-                      labelText: "phone number",
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      controller: _phone,
+                      decoration: InputDecoration(
+                        hintText: "Enter your phone number here",
+                        border: OutlineInputBorder(),
+                        labelText: "phone number",
+                      ),
                     ),
                   ),
                 ),
@@ -174,12 +183,15 @@ class ProfilePageState extends State<ProfilePage> {
             Row(
               children: [
                 Flexible(
-                  child: TextField(
-                    controller: _email,
-                    decoration: InputDecoration(
-                      hintText: "Enter your email here",
-                      border: OutlineInputBorder(),
-                      labelText: "email address",
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      controller: _email,
+                      decoration: InputDecoration(
+                        hintText: "Enter your email here",
+                        border: OutlineInputBorder(),
+                        labelText: "email address",
+                      ),
                     ),
                   ),
                 ),
