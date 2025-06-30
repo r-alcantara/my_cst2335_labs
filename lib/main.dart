@@ -6,10 +6,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dataRepository.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-void main() {
+void main() { // entry point of app
   runApp(const MyApp());
 }
 
+// root widget. Stateless Widget = doesn't change once built
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -140,20 +141,24 @@ class _MyHomePageState extends State<MyHomePage> {
                 String validlogin = "Ramona";
                 String validpassword = "QWERTY123";
 
+                if (password == validpassword && login == validlogin) {
+                  setState(() {
+                    imageSource = 'images/idea.png';
+                    DataRepository.loginName = login; // save login
+                  });
 
+
+                // if success, show dialog
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
                       title: const Text('Save?'),
-                      content: const Text(
-                        'Do you want to save this login and password?',
-                      ),
+                      content: const Text('Do you want to save this login and password?'),
                       actions: <Widget>[
-                        FilledButton(
+                        FilledButton(child: Text("YES"),
                           onPressed: () {
-                            _eprefs.setString(
-                              "UserLogIn",
+                            _eprefs.setString("UserLogIn",
                               _loginController.value.text,
                             );
                             _eprefs.setString(
@@ -163,49 +168,43 @@ class _MyHomePageState extends State<MyHomePage> {
 
                             Navigator.pop(context);
 
-                            var snackBar = SnackBar( // when user say yes
-                              content: Text(
-                                'Username and Password have been saved and loaded!',
-                              ),
+                            // pop up message when user say yes
+                            var snackBar = SnackBar(
+                              content: Text('Username and Password have been saved and loaded!'),
                             );
 
-                            ScaffoldMessenger.of(
-                              context,
-                            ).showSnackBar(snackBar);
+                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                            Navigator.pushNamed(context,'/profilePage');
                           },
-                          child: Text("YES"),
                         ),
 
-                        ElevatedButton(
+                        ElevatedButton( child: Text("NO"),
                           onPressed: () {
                             Navigator.pop(context);
                             _eprefs.clear();
                           },
-                          child: Text("NO"),
                         ),
 
-                        OutlinedButton(
+                        OutlinedButton( child: Text("LATER"),
                           onPressed: () {
                             Navigator.pop(context);
                           },
-                          child: Text("LATER"),
                         ),
                       ], // end actions widget
                     ); // end AlertDialog
                   },
                 ); // end showDialog
 
-                setState(() {
-                  if (password == validpassword && login == validlogin) {
-                    imageSource = 'images/idea.png';
-                    DataRepository.loginName = login; // save login
-                    Navigator.pushNamed(context,'/profilePage');
-                  } else {
+
+                } else {
+                  setState(() {
                     imageSource = 'images/stop.png';
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("Invalid login or password")));
-                  }
-                });
+                  });
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Invalid login or password")),
+                  );
+                }
               },
             ),
           ],

@@ -1,9 +1,9 @@
 
-
-class DataRepository{
-  static String loginName = " "; // not nullable. initally empty string
-  static String firstName = " ";
-  static String lastName = " ";
-  static String phone = " ";
-  static String email = " ";
+// central data storage accessible across pages
+class DataRepository {
+  static String loginName = " "; // not nullable. initially empty string
+   String firstName = " ";
+   String lastName = " ";
+   String phone = " ";
+   String email = " ";
 }

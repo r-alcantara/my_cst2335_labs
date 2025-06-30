@@ -5,7 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 //import 'package:flutter/rendering.dart';
 
-// 1. resources for application
+// 1. resources for application.
 class ProfilePage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -15,6 +15,7 @@ class ProfilePage extends StatefulWidget {
 
 // 2. the layout of application --fill in appBar and body
 class ProfilePageState extends State<ProfilePage> {
+  //variables
   late String name; // or use empty String
   late TextEditingController _firstName; // read what was typed as login
   late TextEditingController _lastName;
@@ -23,17 +24,67 @@ class ProfilePageState extends State<ProfilePage> {
 
   final EncryptedSharedPreferences _eprefs = EncryptedSharedPreferences();
 
+  // create listeners
+  void firstNameListener() {
+    //_eprefs.setString("firstName", _firstName.text);
+    saveData(); // save info
+  }
+  void lastNameListener() {
+    //_eprefs.setString("lastName", _lastName.text);
+    saveData();
+  }
+  void phoneListener() {
+    //_eprefs.setString("phone", _phone.text);
+    saveData();
+  }
+  void emailListener() {
+    //_eprefs.setString("email", _email.text);
+    saveData();
+  }
+
+  // loadData() opens eprefs, get saved info, put in textfield.
+  Future<void> loadData() async {
+    String loadFirstName = await _eprefs.getString("firstName") ?? "";
+      _firstName.text = loadFirstName;
+    String loadLastName = await _eprefs.getString("lastName") ?? "";
+      _lastName.text = loadLastName;
+    String loadPhone = await _eprefs.getString("phone") ?? "";
+      _phone.text = loadPhone;
+    String loadEmail = await _eprefs.getString("email") ?? "";
+      _email.text = loadEmail;
+  }
+
+  // saveData
+  Future<void> saveData() async {
+    //                      "key": save as , "value": what the user typed
+    await _eprefs.setString("firstName", _firstName.text);
+    await _eprefs.setString("lastName", _lastName.text);
+    await _eprefs.setString("phone", _phone.text);
+    await _eprefs.setString("email", _email.text);
+  }
+
   @override
   void initState() {
     super.initState();
 
     name = DataRepository.loginName; //retrieve what was sent from login in main
 
-    _firstName = TextEditingController(); //making _controller
+    // making _controllers
+    _firstName = TextEditingController();
     _lastName = TextEditingController();
     _phone = TextEditingController();
     _email = TextEditingController();
+
+    // attach listeners to _controller
+    _firstName.addListener(firstNameListener);
+    _lastName.addListener(lastNameListener);
+    _phone.addListener(phoneListener);
+    _email.addListener(emailListener);
+
+    // load saved data
+    loadData();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -48,11 +99,9 @@ class ProfilePageState extends State<ProfilePage> {
           children: <Widget>[
             Text("Welcome Back, $name ! This is Page 2"),
 
-            Row(
-              children: [
-                Flexible(
-                  child: TextField(
-                    controller: _firstName,
+            // use Flexible() inside Row() for proper resize on diff devices
+            Row(children: [
+                Flexible(child: TextField(controller: _firstName,
                     decoration: InputDecoration(
                       hintText: "Enter your first name here",
                       border: OutlineInputBorder(),
@@ -108,12 +157,11 @@ class ProfilePageState extends State<ProfilePage> {
                   onPressed: () {
                     canLaunch("sms: ${_phone.text}").then((itCan) {
                       if (itCan) {
-                        launch("tel:${_phone.text}");
+                        launch("sms:${_phone.text}");
                       } else {
                         var snackBar = SnackBar(
                           content: Text('you cannot text from this device'),
                         );
-
                         ScaffoldMessenger.of(context).showSnackBar(snackBar);
                       }
                     });
@@ -138,12 +186,14 @@ class ProfilePageState extends State<ProfilePage> {
                 IconButton(
                   onPressed: () {
                     print(_email.text);
-                    canLaunch("email: ${_email.text}").then((itCan) {
+                    canLaunch("mailto: ${_email.text}").then((itCan) {
                       if (itCan) {
-                        launch("email: ${_email.text}");
+                        launch("mailto: ${_email.text}");
                       } else {
                         var snackBar = SnackBar(
-                          content: Text('you cannot email from this device'),
+                          content: Text(
+                            'you cannot send email from this device',
+                          ),
                         );
 
                         ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -155,28 +205,31 @@ class ProfilePageState extends State<ProfilePage> {
               ],
             ),
 
+            // save all input fields into secure storage using EncryptedSHaredPreferences.
             OutlinedButton(
-              child: Text("Save info?"),
+              child: Text("Save info"),
               onPressed: () {
-                _eprefs.setString("_firstName", _firstName.text); //same as save data()
-
-                _eprefs.setString("_lastName", _lastName.text);
-
-                _eprefs.setString("_phone", _phone.text);
-
-                _eprefs.setString("_email", _email.text);
+                saveData();
 
                 var snackBar = SnackBar(content: Text('Information saved!'));
-
+                // show confirmation message after saving
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
               },
             ),
+
+            // Go back button
             FilledButton(
               child: Text("Go back"),
               onPressed: () {
                 Navigator.pop(context);
               },
             ),
+            
+            // Clear info button
+            OutlinedButton(child: Text("Clear info"),
+                onPressed: () {
+                  _eprefs.clear();
+                })
           ],
         ),
       ),
