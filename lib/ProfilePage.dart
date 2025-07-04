@@ -235,12 +235,6 @@ class ProfilePageState extends State<ProfilePage> {
                 Navigator.pop(context);
               },
             ),
-            
-            // Clear info button
-            OutlinedButton(child: Text("Clear info"),
-                onPressed: () {
-                  _eprefs.clear();
-                })
           ],
         ),
       ),
