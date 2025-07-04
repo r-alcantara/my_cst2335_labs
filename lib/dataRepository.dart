@@ -7,3 +7,4 @@ class DataRepository {
    String phone = " ";
    String email = " ";
 }
+

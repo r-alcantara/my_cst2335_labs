@@ -212,7 +212,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     },
                   ); // end showDialog
 
-
                   } else {
                     setState(() {
                       imageSource = 'images/stop.png';

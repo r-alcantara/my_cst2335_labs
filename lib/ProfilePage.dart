@@ -85,7 +85,6 @@ class ProfilePageState extends State<ProfilePage> {
     loadData();
   }
 
-
   @override
   Widget build(BuildContext context) {
     // returns Scaffold for page
