@@ -41,7 +41,8 @@ class _MyHomePageState extends State<MyHomePage> {
   late TextEditingController _inputController; //this is to read what was typed
   late TextEditingController _quantityController;
 
-  List<String> words = []; //create an empty array
+  List<String> words = []; //create an empty array for items
+  List<String> quantities = [];
 
   var isChecked = false;
 
@@ -95,7 +96,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   var input = _inputController.text.trim();
                   var qty = _quantityController.text.trim();
                   if(input.isNotEmpty && qty.isNotEmpty) {
-                    words.add("$input (qty: $qty)"); // For now, just add combined string
+                    words.add(input); // For now, just add combined string
+                    quantities.add(qty); // add the quantity to quantities too
                     _inputController.text = "";
                     _quantityController.text = "";
                   }
@@ -150,7 +152,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("Item: $rowNumber is ${words[rowNumber]}"),
+
+                    Text("$rowNumber: ${words[rowNumber]} quantity: ${quantities[rowNumber]}"),
                     //Text("Item: $rowNumber is ${quantities[rowNumber]}"), // just do the same like word but make it quantities
                   ],
                 ),
