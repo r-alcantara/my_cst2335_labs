@@ -154,7 +154,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: [
 
                     Text("$rowNumber: ${words[rowNumber]} quantity: ${quantities[rowNumber]}"),
-                    //Text("Item: $rowNumber is ${quantities[rowNumber]}"), // just do the same like word but make it quantities
+                    //Text("Item: $rowNumber is ${quantities[rowNumber]}"), // just do the same like word but make it quantities.
                   ],
                 ),
               );
