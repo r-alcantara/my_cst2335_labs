@@ -85,6 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget ListPage() {
     //put our layout in here
+
     return Column(
       children: [
         Row(
@@ -95,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 setState(() {
                   var input = _inputController.text.trim();
                   var qty = _quantityController.text.trim();
-                  if(input.isNotEmpty && qty.isNotEmpty) {
+                  if (input.isNotEmpty && qty.isNotEmpty) {
                     words.add(input); // For now, just add combined string
                     quantities.add(qty); // add the quantity to quantities too
                     _inputController.text = "";
@@ -105,6 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             SizedBox(width: 10), // small gap between button and inputs
+
             Expanded(
               child: TextField(
                 controller: _inputController,
@@ -115,6 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             SizedBox(width: 10), // gap between the two textfields
+
             Expanded(
               child: TextField(
                 controller: _quantityController,
@@ -122,44 +125,54 @@ class _MyHomePageState extends State<MyHomePage> {
                   hintText: 'Type quantity here',
                   border: OutlineInputBorder(),
                 ),
-                keyboardType: TextInputType.number, // number keyboard for quantity
+                keyboardType:
+                    TextInputType.number, // number keyboard for quantity
               ),
             ),
           ],
         ),
 
         Expanded(
-          child: ListView.builder(
-            itemCount: words.length,
-            itemBuilder: (context, rowNumber) {
-              return GestureDetector(
-                onTap: () {},
-                onHorizontalDragUpdate: (details) {
-                  if (((details.primaryDelta!) * (details.primaryDelta!)) >
-                      100.0)
-                    setState(() {
-                      words.removeAt(rowNumber);
-                    });
-                },
-                //details contains how far finger has swiped
-                onDoubleTap: () {
-                  //remove the item:
-                  setState(() {
-                    words.removeAt(rowNumber);
-                  });
-                },
-                onLongPress: () {},
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-
-                    Text("$rowNumber: ${words[rowNumber]} quantity: ${quantities[rowNumber]}"),
-                    //Text("Item: $rowNumber is ${quantities[rowNumber]}"), // just do the same like word but make it quantities.
-                  ],
-                ),
-              );
-            },
-          ), //create our ListView
+          child:
+              words.isEmpty
+                  ? Center (
+                    child: Text(
+                      "There are no items in the list",
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  )
+                  : ListView.builder(
+                    itemCount: words.length,
+                    itemBuilder: (context, rowNumber) {
+                      return GestureDetector(
+                        onTap: () {},
+                        onHorizontalDragUpdate: (details) {
+                          if (((details.primaryDelta!) *
+                                  (details.primaryDelta!)) >
+                              100.0)
+                            setState(() {
+                              words.removeAt(rowNumber);
+                            });
+                        },
+                        //details contains how far finger has swiped
+                        onLongPress: () {
+                          //remove the item:
+                          setState(() {
+                            words.removeAt(rowNumber);
+                          });
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "$rowNumber: ${words[rowNumber]} quantity: ${quantities[rowNumber]}",
+                            ),
+                            //Text("Item: $rowNumber is ${quantities[rowNumber]}"), // just do the same like word but make it quantities.
+                          ],
+                        ),
+                      );
+                    },
+                  ), //create our ListView
         ),
       ],
     );
