@@ -7,13 +7,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  /*
-  String  getString( {  int a = 0, double b=0.0, bool c = false }){
-
-    return "hello world";
-
-  }*/
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -71,8 +64,11 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text("CST2335 page"),
+        backgroundColor: Theme
+            .of(context)
+            .colorScheme
+            .inversePrimary,
+        title: Text("CST2335 page - Lab6"),
       ),
       body: Center(
         child: Padding(
@@ -90,22 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
       children: [
         Row(
           children: [
-            ElevatedButton(
-              child: Text("Add item"),
-              onPressed: () {
-                setState(() {
-                  var input = _inputController.text.trim();
-                  var qty = _quantityController.text.trim();
-                  if (input.isNotEmpty && qty.isNotEmpty) {
-                    words.add(input); // For now, just add combined string
-                    quantities.add(qty); // add the quantity to quantities too
-                    _inputController.text = "";
-                    _quantityController.text = "";
-                  }
-                });
-              },
-            ),
-            SizedBox(width: 10), // small gap between button and inputs
+
 
             Expanded(
               child: TextField(
@@ -116,7 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             ),
-            SizedBox(width: 10), // gap between the two textfields
+
 
             Expanded(
               child: TextField(
@@ -126,53 +107,92 @@ class _MyHomePageState extends State<MyHomePage> {
                   border: OutlineInputBorder(),
                 ),
                 keyboardType:
-                    TextInputType.number, // number keyboard for quantity
+                TextInputType.number, // number keyboard for quantity
               ),
             ),
+
+            ElevatedButton(
+              child: Text("Add item"),
+              onPressed: () {
+                setState(() {
+                  var input = _inputController.text.trim();
+                  var qty = _quantityController.text.trim();
+                  if (input.isNotEmpty && qty.isNotEmpty) {
+                    words.add(input);
+                    quantities.add(qty); // add the quantity to quantities too
+                    _inputController.text = "";
+                    _quantityController.text = "";
+                  }
+                });
+              },
+            ),
+
           ],
         ),
 
         Expanded(
-          child:
-              words.isEmpty
-                  ? Center (
-                    child: Text(
-                      "There are no items in the list",
-                      style: TextStyle(fontSize: 18),
-                    ),
-                  )
-                  : ListView.builder(
-                    itemCount: words.length,
-                    itemBuilder: (context, rowNumber) {
-                      return GestureDetector(
-                        onTap: () {},
-                        onHorizontalDragUpdate: (details) {
-                          if (((details.primaryDelta!) *
-                                  (details.primaryDelta!)) >
-                              100.0)
-                            setState(() {
-                              words.removeAt(rowNumber);
-                            });
-                        },
-                        //details contains how far finger has swiped
-                        onLongPress: () {
-                          //remove the item:
-                          setState(() {
-                            words.removeAt(rowNumber);
-                          });
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "$rowNumber: ${words[rowNumber]} quantity: ${quantities[rowNumber]}",
-                            ),
-                            //Text("Item: $rowNumber is ${quantities[rowNumber]}"), // just do the same like word but make it quantities.
-                          ],
-                        ),
+          child: words.isEmpty ?
+          Center (
+            child: Text("There are no items in the list",
+              style: TextStyle(fontSize: 18),
+            ),
+          )
+              : ListView.builder(
+            itemCount: words.length,
+            itemBuilder: (context, rowNumber) {
+              return GestureDetector(
+                onTap: () {},
+                onHorizontalDragUpdate: (details) {
+                  if (((details.primaryDelta!) *
+                      (details.primaryDelta!)) >
+                      100.0)
+                    setState(() {
+                      words.removeAt(rowNumber);
+                    });
+                },
+                //details contains how far finger has swiped
+                onLongPress: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text("Delete item"),
+                        content: Text(
+                            "Are you sure you want to delete '${words[rowNumber]}'?"),
+                        actions: [
+                          TextButton(
+                            child: Text("No"),
+                            onPressed: () {
+                              Navigator.of(context).pop(); // Just close the dialog
+                            },
+                          ),
+                          TextButton(
+                            child: Text("Yes"),
+                            onPressed: () {
+                              setState(() {
+                                words.removeAt(rowNumber);
+                                quantities.removeAt(rowNumber); // keep both lists in sync
+                              });
+                              Navigator.of(context).pop(); // Close the dialog after deletion
+                            },
+                          ),
+                        ],
                       );
                     },
-                  ), //create our ListView
+                  );
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      " ${rowNumber + 1}: ${words[rowNumber]} quantity: ${quantities[rowNumber]}",
+                    ),
+                    //Text("Item: $rowNumber is ${quantities[rowNumber]}"), // just do the same like word but make it quantities.
+                  ],
+                ),
+              );
+            },
+          ), //create our ListView
         ),
       ],
     );
