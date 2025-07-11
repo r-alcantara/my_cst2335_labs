@@ -1,36 +1,28 @@
-import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart'
-    show EncryptedSharedPreferences;
 import 'package:flutter/material.dart';
-import 'package:lab2/ProfilePage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dataRepository.dart';
-import 'package:url_launcher/url_launcher.dart';
 
-void main() { // entry point of app
+void main() {
   runApp(const MyApp());
 }
 
-// root widget. Stateless Widget = doesn't change once built
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+  /*
+  String  getString( {  int a = 0, double b=0.0, bool c = false }){
+
+    return "hello world";
+
+  }*/
+
   @override
   Widget build(BuildContext context) {
-
-    // 3.  constructor for whole application
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-
-      initialRoute: '/', // home: const MyHomePage(title: 'Start of Week4 Lab'), //remove this fro named routes
-
-      routes: { //default route {} is a map
-        '/': (context) => MyHomePage(title: 'title'),
-        '/profilePage': (context) => ProfilePage(),
-      },
+      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
@@ -45,57 +37,33 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late TextEditingController _loginController; // read what was typed as login
-  late TextEditingController _passwordController; // read what was typed as pass
-  var imageSource = 'images/question-mark.png';
-  final EncryptedSharedPreferences _eprefs = EncryptedSharedPreferences();
+  double _counter = 0;
+  late TextEditingController _inputController; //this is to read what was typed
+  late TextEditingController _quantityController;
+
+  List<String> words = []; //create an empty array
+
+  var isChecked = false;
 
   @override
   void initState() {
+    //similar to onloaded=
     super.initState();
-    _loginController = TextEditingController(); //making _controller
-    _passwordController = TextEditingController();
-    getSharedPreferences();
+    _inputController = TextEditingController();
+    _quantityController = TextEditingController();
   }
 
   @override
   void dispose() {
-    _loginController.dispose();
-    _passwordController.dispose();
+    _inputController.dispose();
+    _quantityController.dispose();
     super.dispose(); // free the memory of what was typed
   }
 
-  void getSharedPreferences() async {
-    // wait until this finishes. needs async:
-    //var data = await EncryptedSharedPreferences.getInstance(); // return the SharedPreferences that are loaded (could be any images)
-
-    var str = await _eprefs.getString(
-      "UserLogIn",
-    ); // return null if UserlogIn is not there
-    var pw = await _eprefs.getString(
-      "UserPass",
-    ); // return null if UserlogIn is not there
-    if (str.length > 0) // found it!
-    {
-      // get page ready with data on disk
-      _loginController.text = str;
-      _passwordController.text = pw;
-    }
-    /*
-    // does not need async:
-    SharedPreferences.getInstance().then( (data ) {
-
+  void _incrementCounter() {
+    setState(() {
+      if (_counter < 99.0) _counter++;
     });
-
-    var pass =  data.getString("UserPass"); // return null if UserPass is not there
-    if (pass != null) // found it!
-        {
-      // get page ready with data on disk
-      _passwordController.text = pass;
-    }*/
-
-    // does not need async:
-    SharedPreferences.getInstance().then((data) {});
   }
 
   @override
@@ -103,130 +71,102 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+        title: Text("CST2335 page"),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                controller: _loginController,
-                decoration: InputDecoration(
-                  hintText: "Enter your Login here",
-                  border: OutlineInputBorder(),
-                  labelText: "Login",
-                ),
-              ),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                controller: _passwordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  hintText: "Enter your Password here",
-                  border: OutlineInputBorder(),
-                  labelText: "Password",
-                ),
-              ),
-            ),
-
-            Semantics(child: Image.asset(imageSource, width: 300, height: 300)),
-
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ElevatedButton(
-                child: Text("Login"),
-                onPressed: () {
-                  String login = _loginController.text;
-                  String password = _passwordController.text;
-                  DataRepository.loginName = _loginController.value.text; // take what user type in
-
-                  // valid credentials
-                  String validlogin = "Ramona";
-                  String validpassword = "QWERTY123";
-
-                  if (password == validpassword && login == validlogin) {
-                    setState(() {
-                      imageSource = 'images/idea.png';
-                      DataRepository.loginName = login; // save login
-                    });
-
-
-                  // if success, show dialog
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text('Save?'),
-                        content: const Text('Do you want to save this login and password?'),
-                        actions: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: FilledButton(child: Text("YES"),
-                              onPressed: () {
-                                _eprefs.setString("UserLogIn",
-                                  _loginController.value.text,
-                                );
-                                _eprefs.setString(
-                                  "UserPass",
-                                  _passwordController.value.text,
-                                );
-
-                                Navigator.pop(context);
-
-                                // pop up message when user say yes
-                                var snackBar = SnackBar(
-                                  content: Text('Username and Password have been saved and loaded!'),
-                                );
-
-                                ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                Navigator.pushNamed(context,'/profilePage');
-                              },
-                            ),
-                          ),
-
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ElevatedButton( child: Text("NO"),
-                              onPressed: () {
-                                Navigator.pop(context);
-                                _eprefs.clear();
-                              },
-                            ),
-                          ),
-
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: OutlinedButton( child: Text("LATER"),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                            ),
-                          ),
-                        ], // end actions widget
-                      ); // end AlertDialog
-                    },
-                  ); // end showDialog
-
-                  } else {
-                    setState(() {
-                      imageSource = 'images/stop.png';
-                    });
-
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("Invalid login or password")),
-                    );
-                  }
-                },
-              ),
-            ),
-          ],
+        child: Padding(
+          padding: EdgeInsets.all(40),
+          child: ListPage(), //<< Today's topic
         ),
       ),
     );
   }
+
+  Widget ListPage() {
+    //put our layout in here
+    return Column(
+      children: [
+        Row(
+          children: [
+            ElevatedButton(
+              child: Text("Add item"),
+              onPressed: () {
+                setState(() {
+                  var input = _inputController.text.trim();
+                  var qty = _quantityController.text.trim();
+                  if(input.isNotEmpty && qty.isNotEmpty) {
+                    words.add("$input (qty: $qty)"); // For now, just add combined string
+                    _inputController.text = "";
+                    _quantityController.text = "";
+                  }
+                });
+              },
+            ),
+            SizedBox(width: 10), // small gap between button and inputs
+            Expanded(
+              child: TextField(
+                controller: _inputController,
+                decoration: InputDecoration(
+                  hintText: 'Type the item here',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+            SizedBox(width: 10), // gap between the two textfields
+            Expanded(
+              child: TextField(
+                controller: _quantityController,
+                decoration: InputDecoration(
+                  hintText: 'Type quantity here',
+                  border: OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.number, // number keyboard for quantity
+              ),
+            ),
+          ],
+        ),
+
+        Expanded(
+          child: ListView.builder(
+            itemCount: words.length,
+            itemBuilder: (context, rowNumber) {
+              return GestureDetector(
+                onTap: () {},
+                onHorizontalDragUpdate: (details) {
+                  if (((details.primaryDelta!) * (details.primaryDelta!)) >
+                      100.0)
+                    setState(() {
+                      words.removeAt(rowNumber);
+                    });
+                },
+                //details contains how far finger has swiped
+                onDoubleTap: () {
+                  //remove the item:
+                  setState(() {
+                    words.removeAt(rowNumber);
+                  });
+                },
+                onLongPress: () {},
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Item: $rowNumber is ${words[rowNumber]}"),
+                    //Text("Item: $rowNumber is ${quantities[rowNumber]}"), // just do the same like word but make it quantities
+                  ],
+                ),
+              );
+            },
+          ), //create our ListView
+        ),
+      ],
+    );
+  }
+
+  void setNewValue(double value) {
+    setState(() {
+      _counter = value;
+    }); //update the GUI to new values
+  }
+
+  void buttonClicked() {}
 }
