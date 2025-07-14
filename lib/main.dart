@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lab2/ShoppingItem.dart';
+import 'package:lab2/ShoppingItemDatabase.dart';
 
 void main() {
   runApp(const MyApp());
@@ -34,17 +36,33 @@ class _MyHomePageState extends State<MyHomePage> {
   late TextEditingController _inputController; //this is to read what was typed
   late TextEditingController _quantityController;
 
-  List<String> words = []; //create an empty array for items
+  List<ShoppingItem> words = []; //create an empty array for items // changed <> :19b
   List<String> quantities = [];
+
+  late var myDAO; // use this in several functions so has to be declared as class var :18
 
   var isChecked = false;
 
   @override
-  void initState() {
-    //similar to onloaded=
+  void initState() { //similar to onloaded =
     super.initState();
     _inputController = TextEditingController();
     _quantityController = TextEditingController();
+
+    // open the database :17 the word $Floor, followed by you database. 'app_database.db' must be unique
+    //final database = await $FloorShoppingItemDatabase.databaseBuilder('app_database.db').build();
+    // since we cant use 'await' here cos initState CANT BE ASYNC so must use '.then' notation
+    $FloorShoppingItemDatabase.databaseBuilder('app_database.db')
+      .build().then ( (database) async { // marked as aync cos inside a function :19
+        // by now, database has all the objects:
+        myDAO = database.getDAO; // from db, we use DAO object to access db :17a
+
+        // get all objects from db with query: 19a
+        var results = await myDAO.getAllShoppingItems();
+
+        // add results to our list:
+
+    } );
   }
 
   @override
@@ -81,13 +99,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget ListPage() {
     //put our layout in here
-
     return Column(
       children: [
         Row(
           children: [
-
-
             Expanded(
               child: TextField(
                 controller: _inputController,
@@ -117,8 +132,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 setState(() {
                   var input = _inputController.text.trim();
                   var qty = _quantityController.text.trim();
+
+                  var newItem = ShoppingItem (ShoppingItem.ID++, input); // call constructor and increment on what user input :19b
                   if (input.isNotEmpty && qty.isNotEmpty) {
-                    words.add(input);
+                    words.add(newItem); // add what user typed :19c
+                    myDAO.addShoppingItem(newItem); // insert to database
                     quantities.add(qty); // add the quantity to quantities too
                     _inputController.text = "";
                     _quantityController.text = "";
@@ -181,6 +199,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     },
                   );
                 },
+
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
