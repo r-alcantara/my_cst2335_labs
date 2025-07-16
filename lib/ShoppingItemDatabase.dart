@@ -13,7 +13,7 @@ import "ShoppingItem.dart";   // Dao's matching entity
 
 part "ShoppingItemDatabase.g.dart"; // *partial* the generated code will be here :13
 
-@Database( version:1, entities: [ShoppingItem] ) // declare this class as a database. Entities are an [] of ShoppingItem :14
+@Database( version:2, entities: [ShoppingItem] ) // declare this class as a database. Entities are an [] of ShoppingItem :14
 abstract class ShoppingItemDatabase extends FloorDatabase {
 
   // create a function returning a DAO object :15

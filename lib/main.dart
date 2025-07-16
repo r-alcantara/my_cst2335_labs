@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lab2/ShoppingItem.dart';
+import 'package:lab2/ShoppingItemDAO.dart';
 import 'package:lab2/ShoppingItemDatabase.dart';
 
 void main() {
@@ -201,6 +202,13 @@ class _MyHomePageState extends State<MyHomePage> {
                           TextButton(
                             child: Text("Yes"),
                             onPressed: () async {
+                              // Get the item to delete
+                              final itemToDelete = words[rowNumber];
+
+                              // Delete from DB
+                              await myDAO.deleteShoppingItem(itemToDelete);
+
+                              // Delete from memory
                               setState(() {
                                 words.removeAt(rowNumber);
                                 quantities.removeAt(rowNumber); // keep both lists in sync
@@ -213,12 +221,11 @@ class _MyHomePageState extends State<MyHomePage> {
                     },
                   );
                 },
-
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      " ${rowNumber + 1}: ${words[rowNumber]} quantity: ${quantities[rowNumber]}",
+                      "Item${rowNumber + 1}: ${words[rowNumber].name} Quantity: ${words[rowNumber].quantity}",
                     ),
                     //Text("Item: $rowNumber is ${quantities[rowNumber]}"), // just do the same like word but make it quantities.
                   ],
