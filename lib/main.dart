@@ -49,20 +49,25 @@ class _MyHomePageState extends State<MyHomePage> {
     _inputController = TextEditingController();
     _quantityController = TextEditingController();
 
-    // open the database :17 the word $Floor, followed by you database. 'app_database.db' must be unique
-    //final database = await $FloorShoppingItemDatabase.databaseBuilder('app_database.db').build();
-    // since we cant use 'await' here cos initState CANT BE ASYNC so must use '.then' notation
+    /**
+     * open the database :17 the word $Floor, followed by you database. 'app_database.db' must be unique
+     *  final database = await $FloorShoppingItemDatabase.databaseBuilder('app_database.db').build();
+     *  since we cant use 'await' here cos initState CANT BE ASYNC so must use '.then' notation
+     */
     $FloorShoppingItemDatabase.databaseBuilder('app_database.db')
-      .build().then ( (database) async { // marked as aync cos inside a function :19
-        // by now, database has all the objects:
+      .build()
+        .then ( (database) async { // marked as aync cos inside a function :19
+
+          // by now, database has all the objects:
         myDAO = database.getDAO; // from db, we use DAO object to access db :17a
+        //var results = await myDAO.getAllShoppingItems();  // get all objects from db with query: 19a
 
-        // get all objects from db with query: 19a
-        var results = await myDAO.getAllShoppingItems();
-
-        // add results to our list:
-
-    } );
+        myDAO.getAllShoppingItems().then((results) {
+          setState(() {
+            words = results; // Load items from DB
+          });
+        });
+    });
   }
 
   @override
@@ -86,7 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
             .of(context)
             .colorScheme
             .inversePrimary,
-        title: Text("CST2335 page - Lab6"),
+        title: Text("CST2335 page - DB lab8"),
       ),
       body: Center(
         child: Padding(
@@ -112,8 +117,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             ),
-
-
             Expanded(
               child: TextField(
                 controller: _quantityController,
@@ -125,26 +128,27 @@ class _MyHomePageState extends State<MyHomePage> {
                 TextInputType.number, // number keyboard for quantity
               ),
             ),
-
             ElevatedButton(
               child: Text("Add item"),
-              onPressed: () {
-                setState(() {
-                  var input = _inputController.text.trim();
-                  var qty = _quantityController.text.trim();
+              onPressed: () async {
+                //setState(() {
+                var input = _inputController.text.trim();
+                var qty = _quantityController.text.trim();
+                //setState(() {
+                if (input.isNotEmpty && qty.isNotEmpty) {
+                  var newItem = ShoppingItem(ShoppingItem.ID++, input,
+                      qty); // call constructor and increment on what user input :19b
 
-                  var newItem = ShoppingItem (ShoppingItem.ID++, input); // call constructor and increment on what user input :19b
-                  if (input.isNotEmpty && qty.isNotEmpty) {
-                    words.add(newItem); // add what user typed :19c
-                    myDAO.addShoppingItem(newItem); // insert to database
-                    quantities.add(qty); // add the quantity to quantities too
-                    _inputController.text = "";
-                    _quantityController.text = "";
-                  }
-                });
+                  words.add(newItem); // add what user typed :19c
+                  quantities.add(qty); // add the quantity to quantities too
+
+                  await myDAO.addShoppingItem(newItem); // Add to DB
+                  _inputController.text = "";
+                  _quantityController.text = "";
+                }
               },
+              //child: Text("Add item"),
             ),
-
           ],
         ),
 
@@ -186,7 +190,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                           TextButton(
                             child: Text("Yes"),
-                            onPressed: () {
+                            onPressed: () async {
                               setState(() {
                                 words.removeAt(rowNumber);
                                 quantities.removeAt(rowNumber); // keep both lists in sync

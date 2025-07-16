@@ -11,7 +11,7 @@ import 'package:sqflite/sqflite.dart' as sqflite;
 import 'ShoppingItemDAO.dart'; // import Dao
 import "ShoppingItem.dart";   // Dao's matching entity
 
-part 'ShoppingItemDatabase.g.dart'; // *partial* the generated code will be here :13
+part "ShoppingItemDatabase.g.dart"; // *partial* the generated code will be here :13
 
 @Database( version:1, entities: [ShoppingItem] ) // declare this class as a database. Entities are an [] of ShoppingItem :14
 abstract class ShoppingItemDatabase extends FloorDatabase {

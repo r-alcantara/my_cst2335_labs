@@ -24,8 +24,8 @@ abstract class ShoppingItemDAO{ // needs to be abstract class cos Floor will cod
   Future < void > deleteShoppingItem ( ShoppingItem tobeDeleted );
 
   // update query. not used in this lab.
-  @update
-  Future < void > updateShoppingItem ( ShoppingItem tobeUpdated ); // by id =
+  //@update
+  //Future < void > updateShoppingItem ( ShoppingItem tobeUpdated ); // by id =
 
 
 }
