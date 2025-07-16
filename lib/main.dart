@@ -49,6 +49,8 @@ class _MyHomePageState extends State<MyHomePage> {
     _inputController = TextEditingController();
     _quantityController = TextEditingController();
 
+
+
     /**
      * open the database :17 the word $Floor, followed by you database. 'app_database.db' must be unique
      *  final database = await $FloorShoppingItemDatabase.databaseBuilder('app_database.db').build();
@@ -131,18 +133,26 @@ class _MyHomePageState extends State<MyHomePage> {
             ElevatedButton(
               child: Text("Add item"),
               onPressed: () async {
-                //setState(() {
+
                 var input = _inputController.text.trim();
                 var qty = _quantityController.text.trim();
-                //setState(() {
+
                 if (input.isNotEmpty && qty.isNotEmpty) {
-                  var newItem = ShoppingItem(ShoppingItem.ID++, input,
-                      qty); // call constructor and increment on what user input :19b
+                  var newItem = ShoppingItem(ShoppingItem.ID++, input, qty); // call constructor and increment on what user input :19b
 
-                  words.add(newItem); // add what user typed :19c
-                  quantities.add(qty); // add the quantity to quantities too
+                  // Add to list and update UI
+                  setState(() {
+                    words.add(newItem);
+                    quantities.add(qty);
+                  });
 
+                  //words.add(newItem); // add what user typed :19c
+                  //quantities.add(qty); // add the quantity to quantities too
+
+                  // Add to database
                   await myDAO.addShoppingItem(newItem); // Add to DB
+
+                  // Clear text fields
                   _inputController.text = "";
                   _quantityController.text = "";
                 }

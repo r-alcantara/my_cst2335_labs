@@ -2,13 +2,12 @@
 
 import 'package:floor/floor.dart';
 
-@entity                                               // tells FLoor to create a table called ShoppingItem :2
+@entity                                            // tells FLoor to create a table called ShoppingItem :2
  class ShoppingItem {
   /*ShoppingItem(int i, String n){   // this is same 4b but long :4a
     id = ID++;
     name = n;
   }*/
-
   ShoppingItem(this.id, this.name, this.quantity) {
    // constructor (short cut) :4b
    if (this.id > ID) {
@@ -22,5 +21,10 @@ import 'package:floor/floor.dart';
   final int id;
   String name;
   String quantity;
-  
+
+
+  @override
+  String toString() {
+   return name; // Or return '$name - $quantity' for more detail
+  }
  }
