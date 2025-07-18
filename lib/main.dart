@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:lab2/ShoppingItem.dart';
-import 'package:lab2/ShoppingItemDAO.dart';
 import 'package:lab2/ShoppingItemDatabase.dart';
 
 void main() {
@@ -33,7 +32,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  double _counter = 0;
   late TextEditingController _inputController; //this is to read what was typed
   late TextEditingController _quantityController;
 
@@ -49,6 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     _inputController = TextEditingController();
     _quantityController = TextEditingController();
+
 
 
 
@@ -80,11 +79,6 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose(); // free the memory of what was typed
   }
 
-  void _incrementCounter() {
-    setState(() {
-      if (_counter < 99.0) _counter++;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -179,11 +173,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   if (((details.primaryDelta!) *
                       (details.primaryDelta!)) >
                       100.0)
-                    setState(() {
-                      words.removeAt(rowNumber);
-                    });
-                },
-                //details contains how far finger has swiped
+                    setState(() { words.removeAt(rowNumber);});
+                  },
+                   //details contains how far finger has swiped
                 onLongPress: () {
                   showDialog(
                     context: context,
@@ -238,11 +230,11 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void setNewValue(double value) {
-    setState(() {
-      _counter = value;
-    }); //update the GUI to new values
-  }
+  //void setNewValue(double value) {
+//    setState(() {
+//      _counter = value;
+//    }); //update the GUI to new values
+//  }
 
   void buttonClicked() {}
 }

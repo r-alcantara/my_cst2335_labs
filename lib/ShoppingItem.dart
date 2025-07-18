@@ -23,6 +23,7 @@ import 'package:floor/floor.dart';
   String quantity;
 
 
+
   @override
   String toString() {
    return name; // Or return '$name - $quantity' for more detail
